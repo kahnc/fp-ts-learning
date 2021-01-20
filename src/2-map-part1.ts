@@ -3,8 +3,6 @@ import { either } from 'fp-ts/lib/Either'
 import { pipe } from "fp-ts/lib/function"
 import { add, boundScore, double, len, sum } from './utils'
 
-// https://prod.liveshare.vsengsaas.visualstudio.com/join?9877BD5BFBF9B9CFD14CB50D88764382069F
-
 // Pipeline proposal: https://github.com/tc39/proposal-pipeline-operator
 //
 // let person = { score: 25 };
@@ -67,25 +65,26 @@ function divide(x: number) {
     }
 }
 
+
 async function main() {
     console.log("Running...")
 
-    // type User = { id: number; name: string; email: string }
-    // type Post = { id: number; title: string; body: string }
+    type User = { id: number; name: string; email: string }
+    type Post = { id: number; title: string; body: string }
 
-    // function getData<D>(response: AxiosResponse<D>): D {
-    //     return response.data;
-    // }
+    function getData<D>(response: AxiosResponse<D>): D {
+        return response.data;
+    }
 
-    // // so clean :)
-    // const result2 = pipe(
-    //     axios.get<User>("https://jsonplaceholder.typicode.com/users/1"), // Promise<AxiosResponse<User>>
-    //     promiseMap(getData), // Promise<User>
-    //     promiseChain((uswer) => axios.get<Post[]>(`https://jsonplaceholder.typicode.com/posts?userId=${user.id}`)),
-    //     promiseMap(getData),
-    //     promiseMap(arrayMap(post => post.title))
-    // )
-    // console.log("Result 2: ", await result2);
+    // so clean :)
+    const result2 = pipe(
+        axios.get<User>("https://jsonplaceholder.typicode.com/users/1"), // Promise<AxiosResponse<User>>
+        promiseMap(getData), // Promise<User>
+        promiseChain((user) => axios.get<Post[]>(`https://jsonplaceholder.typicode.com/posts?userId=${user.id}`)),
+        promiseMap(getData),
+        promiseMap(arrayMap(post => post.title))
+    )
+    console.log("Result 2: ", await result2);
 
     const result3 = pipe(
         3, // number
