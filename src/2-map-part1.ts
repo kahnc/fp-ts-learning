@@ -11,18 +11,30 @@ import { add, boundScore, double, len, sum } from './utils'
 //   |> (_ => add(7, _))
 //   |> (_ => boundScore(0, 100, _));
 
+// Arrays can be "mapped", let's write a curried map for array
+// Given a fn A -> B and an array A[], output an array B[]
 function arrayMap<A, B>(fn: (a: A) => B) {
     return (as: A[]): B[] => as.map(fn)
 }
+// Arrays can also be chained, aka flatMapped
+// Given a fn A -> B[] and an array A[], output an array B[]
+function arrayChain<A, B>(fn: (a: A) => B[]) {
+    return (as: A[]): B[] => as.flatMap(fn)
+}
 
+// Promises are mappable as well
+// Given a fn A -> B and a Promise<A> output a Promise<B>
 function promiseMap<A, B>(fn: (a: A) => B) {
     return (ap: Promise<A>): Promise<B> => ap.then(fn)
 }
 
+// Promises can also be chained (.then), aka .flatMap
+// Given a fn A -> Promise<B> and a Promise<A> output a Promise<B>
 function promiseChain<A, B>(fn: (a: A) => Promise<B>) {
     return (ap: Promise<A>): Promise<B> => ap.then(fn)
 }
 
+// Let's make an Either type
 type Left<E> = { left: E, __tag: "Left" }
 type Right<A> = { right: A, __tag: "Right" }
 type Either<E, A> = Left<E> | Right<A>
@@ -37,6 +49,8 @@ function isLeft<E, A>(either: Either<E, A>): either is Left<E> {
     return either.__tag === "Left"
 }
 
+// How can we make our Either type mappable? 
+// Given a fn A -> B and an Either<E, A> output an Either<E, B>
 function eitherMap<E, A, B>(fn: (a: A) => B) {
     return (either: Either<E, A>): Either<E, B> => {
         if (isLeft(either)) {
@@ -47,6 +61,8 @@ function eitherMap<E, A, B>(fn: (a: A) => B) {
     }
 }
 
+// How can we make our Either type chainable? 
+// Given a fn A -> Either<E, B> and an Either<E, A> output an Either<E, B>
 function eitherChain<E, A, B>(fn: (a: A) => Either<E, B>) {
     return (either: Either<E, A>): Either<E, B> => {
         if (isLeft(either)) {
