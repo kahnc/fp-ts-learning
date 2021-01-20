@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      /* Visit https://aka.ms/tsconfig.json to read more about this file */
+      "allowJs": false,
+      "baseUrl": "/",
+      "target": "es2017",
+      "lib": ["es2019", "dom"],
+      "module": "commonjs",
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "noUnusedParameters": true,
+      "sourceMap": true,
+      "outDir": "./lib",
+      "rootDir": "src"
+    },
+    "include": ["src/**/*"]
+  }
+  
