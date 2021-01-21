@@ -24,14 +24,16 @@ function arrayChain<A, B>(fn: (a: A) => B[]) {
 
 // Promises are mappable as well
 // Given a fn A -> B and a Promise<A> output a Promise<B>
-function promiseMap<A, B>(fn: (a: A) => B) {
-    return (ap: Promise<A>): Promise<B> => ap.then(fn)
-}
+const P = {
+    map<A, B>(fn: (a: A) => B) {
+        return (ap: Promise<A>): Promise<B> => ap.then(fn)
+    },
 
 // Promises can also be chained (.then), aka .flatMap
 // Given a fn A -> Promise<B> and a Promise<A> output a Promise<B>
-function promiseChain<A, B>(fn: (a: A) => Promise<B>) {
-    return (ap: Promise<A>): Promise<B> => ap.then(fn)
+    flatMap<A, B>(fn: (a: A) => Promise<B>) {
+        return (ap: Promise<A>): Promise<B> => ap.then(fn)
+    }
 }
 
 // Let's make an Either type
@@ -51,7 +53,7 @@ function isLeft<E, A>(either: Either<E, A>): either is Left<E> {
 
 // How can we make our Either type mappable? 
 // Given a fn A -> B and an Either<E, A> output an Either<E, B>
-function eitherMap<E, A, B>(fn: (a: A) => B) {
+export function eitherMap<E, A, B>(fn: (a: A) => B) {
     return (either: Either<E, A>): Either<E, B> => {
         if (isLeft(either)) {
             return either
@@ -63,7 +65,7 @@ function eitherMap<E, A, B>(fn: (a: A) => B) {
 
 // How can we make our Either type chainable? 
 // Given a fn A -> Either<E, B> and an Either<E, A> output an Either<E, B>
-function eitherChain<E, A, B>(fn: (a: A) => Either<E, B>) {
+export function eitherChain<E, A, B>(fn: (a: A) => Either<E, B>) {
     return (either: Either<E, A>): Either<E, B> => {
         if (isLeft(either)) {
             return Left(either.left);
